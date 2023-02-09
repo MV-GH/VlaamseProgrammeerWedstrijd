@@ -18,11 +18,13 @@ def verify(solution, input, output, subpath=""):
     success = True
     for line in diffs:
         success = False
-        print(repr(line)) # prevent escape chars from working
+        print(repr(line))  # prevent escape chars from working
 
     if success:
         print(f"{input} matched {output} \n 🚀 SUCCESS 👍 🚀")
 
 
-verify("oplossing.py", "vb.invoer", "vb.uitvoer", "bergwandel/")
-verify("oplossing.py", "wedstrijd.invoer", "wedstrijd.uitvoer", "bergwandel/")
+#verify("oplossing.py", "vb.invoer", "vb.uitvoer", "bergwandel/")
+#verify("oplossing.py", "wedstrijd.invoer", "wedstrijd.uitvoer", "bergwandel/")
+verify("oplossing.py", "vb.invoer", "vb.uitvoer", "slinger/")
+verify("oplossing.py", "wedstrijd.invoer", "wedstrijd.uitvoer", "slinger/")
