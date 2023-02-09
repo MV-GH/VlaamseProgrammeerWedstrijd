@@ -43,7 +43,6 @@ for _ in range(test_cases):
         col = [int(num) for num in input().split()]
         height_card["card"].append(col)
     height_cards.append(height_card)
-print(height_cards, len(height_cards))
 
 # STAGE 2: MODIFY DATA
 
