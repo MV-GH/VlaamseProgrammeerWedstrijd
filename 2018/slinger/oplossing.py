@@ -12,9 +12,8 @@ def get_predict_interval(slinger):
 def fix_slinger(slinger, correct_amount):
     found_seq_pos = math.ceil(len(slinger) / 2)  # if it doesn't contain stars then the middle is the only star possible
     star_dist = correct_amount + 1
-    for i, c in enumerate(slinger.copy()):  # don't modify the thing ur iterating, bad things happen
 
-        # find the start position of a sequence
+    for i, c in enumerate(slinger):  # find the start position of a sequence
         if c == '*' and i + star_dist < len(slinger) and slinger[i + star_dist] == '*':
             found_seq_pos = i
 
@@ -23,7 +22,7 @@ def fix_slinger(slinger, correct_amount):
     for i in range(start_pos, len(slinger), star_dist):
         base_slinger[i] = '*'
 
-    return "".join(base_slinger.copy())
+    return "".join(base_slinger)
 
 
 test_cases = int(input())
