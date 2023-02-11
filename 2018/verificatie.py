@@ -37,5 +37,8 @@ def verify(solution, input, output, subpath=""):
 # algo not currently efficient enough for this
 # verify("solution.py", "wedstrijd.invoer", "wedstrijd.uitvoer", "satelliet/")
 
-verify("oplossing.py", "vb.invoer", "vb.uitvoer", "defectorob/")
-verify("oplossing.py", "wedstrijd.invoer", "wedstrijd.uitvoer", "defectorob/")
+# verify("oplossing.py", "vb.invoer", "vb.uitvoer", "defectorob/")
+# verify("oplossing.py", "wedstrijd.invoer", "wedstrijd.uitvoer", "defectorob/")
+
+verify("oplossing.py", "vb.invoer", "vb.uitvoer", "buur/")
+#verify("oplossing.py", "wedstrijd.invoer", "wedstrijd.uitvoer", "buur/")
