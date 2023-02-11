@@ -2,6 +2,12 @@ import difflib
 import subprocess
 import time
 
+"""
+This file verifies the generated output from my solution to the actual solution
+If wrong outputs the differences
+
+Uncomment to check a certain solution
+"""
 
 def verify(solution, input, output, subpath=""):
     solution = subpath + solution
@@ -13,7 +19,7 @@ def verify(solution, input, output, subpath=""):
     diff_time = time.time() - start_time
     with open(output) as file_2:
         output_text = file_2.readlines()
-    output_text[-1] += '\n'  # missing the last newline in all my outputs somehowe
+    output_text[-1] += '\n'  # missing the last newline in all my outputs somehow
 
     diffs = difflib.unified_diff(output_text, test.stdout.splitlines(True), fromfile=output, tofile=input, lineterm='')
 
@@ -40,5 +46,5 @@ def verify(solution, input, output, subpath=""):
 # verify("oplossing.py", "vb.invoer", "vb.uitvoer", "defectorob/")
 # verify("oplossing.py", "wedstrijd.invoer", "wedstrijd.uitvoer", "defectorob/")
 
-verify("oplossing.py", "vb.invoer", "vb.uitvoer", "buur/")
-#verify("oplossing.py", "wedstrijd.invoer", "wedstrijd.uitvoer", "buur/")
+# verify("oplossing.py", "vb.invoer", "vb.uitvoer", "buur/")
+# verify("oplossing.py", "wedstrijd.invoer", "wedstrijd.uitvoer", "buur/")

@@ -1,5 +1,15 @@
 from collections import deque
 
+"""
+The strategy here is:
+
+A brute force tree, didn't find any smarter method atm
+Constructs bread first and each level contains a replaced lettercode
+Thus when a solution is found, on has the only complete that depth to find other possible solutions which can come alphabetically first
+
+Not efficient enough for the wedstrijd.invoer, (mostly in space complexity, eats up 12GB before i gotta kill it)
+"""
+
 test_cases = int(input())
 codes = []
 

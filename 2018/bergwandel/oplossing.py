@@ -1,5 +1,14 @@
 # HELPER CLASS
 
+
+"""
+The strategy here is pretty simple:
+
+Convert input into a data structure i can use,
+Find the lowest value, then find the next lowest higher value
+repeat this until none are left. From this list convert into the wanted output path
+"""
+
 def clamp(n, minn, maxn):
     return max(min(maxn, n), minn)
 
