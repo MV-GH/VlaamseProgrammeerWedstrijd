@@ -8,6 +8,16 @@ Constructs bread first and each level contains a replaced lettercode
 Thus when a solution is found, on has the only complete that depth to find other possible solutions which can come alphabetically first
 
 Not efficient enough for the wedstrijd.invoer, (mostly in space complexity, eats up 12GB before i gotta kill it)
+
+NEW STRATEGY??!
+
+A tree with on each depth a new combination thats replaced, stop at that depth when a solution is found but complete
+the depth to find possible other solutions
+Start with longest lettercode and replace if possible
+if lettercodes with same length, then do em all but swap between but do the letter alphabettically first
+(codes with same length must have alphabetically first as solution)
+when no solution on that depth is found, backtrack one depth and try an other combination
+
 """
 
 test_cases = int(input())
