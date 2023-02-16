@@ -39,7 +39,7 @@ def verify(solution, input, output, subpath=""):
 # verify("oplossing.py", "vb.invoer", "vb.uitvoer", "slinger/")
 # verify("oplossing.py", "wedstrijd.invoer", "wedstrijd.uitvoer", "slinger/")
 
-# verify("solution.py", "vb.invoer", "vb.uitvoer", "satelliet/")
+verify("solution.py", "vb.invoer", "vb.uitvoer", "satelliet/")
 # algo not currently efficient enough for this
 # verify("solution.py", "wedstrijd.invoer", "wedstrijd.uitvoer", "satelliet/")
 
