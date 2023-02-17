@@ -15,7 +15,7 @@ def verify(solution, input, output, subpath=""):
     output = subpath + output
 
     start_time = time.time()
-    test = subprocess.run(['python', solution], stdin=open(input), stdout=subprocess.PIPE, text=True)
+    test = subprocess.run(['python3', solution], stdin=open(input), stdout=subprocess.PIPE, text=True)
     diff_time = time.time() - start_time
     with open(output) as file_2:
         output_text = file_2.readlines()

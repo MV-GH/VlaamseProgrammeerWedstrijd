@@ -1,5 +1,4 @@
-from collections import deque, OrderedDict
-import re
+from collections import deque, OrderedDict, defaultdict
 
 """
 The strategy here is:
@@ -21,9 +20,6 @@ when no solution on that depth is found, backtrack one depth and try an other co
 
 """
 
-test_cases = int(input())
-codes = []
-
 
 class Node:
     def __init__(self, name, depth=0, letter=""):
@@ -32,7 +28,7 @@ class Node:
         self.children = []
         self.depth = depth
 
-    def __str__(self): return self.name
+    def __str__(self): return self.letters
 
     def __repr__(self): return self.__str__()
 
@@ -69,79 +65,49 @@ if it is a substring of that string its possible
 """
 
 
-def is_path_possible(code, alphabet):
-    subcodes = re.split("[^01]+", code)
-    for subcode in subcodes:
-        if subcode == '':
-            continue
-        found = False
-        for replace_code in alphabet.values():
-            if replace_code in subcode:
-                found = True
-        if not found:
-            return False
-    return True
+def gen_blacklist(ordered_alpha: OrderedDict):
+    blacklist = defaultdict(list)
+    copy_alphabet = ordered_alpha.copy()
+    for key in ordered_alpha:
+        replacement = ordered_alpha[key]
+        if len(replacement) < 2:
+            break
+        del copy_alphabet[key]  # remove itself, else would return itself as possible solution, and longer codes not possible anyway
+        solutions = solve(Node(replacement), copy_alphabet)
+        if solutions != ["ONMOGELIJK"]:
+            for sol in solutions:
+                blacklist[sol[-1]].append(sol[0:-1])  # appends the solution of chars upto the last char to the last char list
+
+    return blacklist
 
 
-def rec_walk(code: str, alphabet):
-    for key in alphabet:  # TODO possible unneeded work
-        if alphabet[key] in code:
-            new_code = code.replace(alphabet[key], key, 1)
-            if not ('0' in new_code or '1' in new_code):
-                return new_code
-            test = is_path_possible(new_code, alphabet)
-            if test:
-                found = rec_walk(new_code, alphabet)
-                if found is not None:
-                    return found
-
-
-def walkv2(root: str, alphabet):
-    found = rec_walk(root, alphabet)
-    return found or "ONMOGELIJK"
-
-
-def replacer(code: str, alphabet: {}):
-    queue = deque([Node(code)])
-    while queue:
-        cur_node = queue.popleft()
-        found = False
-        for key in alphabet:
-            replace_code = alphabet[key]
-            if cur_node.name.startswith(replace_code):
-                cur_node.letters += key
-                cur_node.name = cur_node.name.replace(replace_code, "", 1)
-                found = True
-                break
-        if not found:
-            return "ONMOGELIJK"
-    return new_code
-
-def walk(root: Node, alphabet):
+def solve(root: Node, alphabet, blacklist=None):
     queue = deque([root])
     solutions = set()
     while len(queue) > 0:
         cur_node = queue.popleft()
         for key in alphabet:
             replace_code = alphabet[key]
-            if replace_code not in cur_node.name or (not cur_node.name.startswith(replace_code)):
+            if replace_code not in cur_node.name or \
+                    (not cur_node.name.startswith(replace_code)) or \
+                    blacklist and blacklist[key] and any(cur_node.letters.endswith(x) for x in blacklist[key]):
                 continue
             new_code = cur_node.name.replace(replace_code, "", 1)
             if new_code == "":
                 solutions.add(cur_node.letters + key)
-                while queue and queue[-1].depth == cur_node.depth + 1:  # removes elements from the next depth, found solution at this depth already
+                while queue and queue[-1].depth > cur_node.depth:  # removes elements from the next depth, found solution at this depth already
                     queue.pop()
                 break
             new_node = cur_node.make_child(new_code, key)
-            cur_node.children.append(new_node)
-        if not solutions:  # if it found a solution let it complete that depth so that it may find our solutions that could may be alphabetically be better
-            queue.extend(cur_node.children)
-            cur_node.children.clear()  # saves memory but destroys the tree structure for so only keep for debuggging, (keeps all the nodes in a tree alive)
+            if not solutions: # found a solution, so only complete solutions at this depth
+                queue.append(new_node)
+                #cur_node.children.append(new_node)
     if not solutions:
-        return "ONMOGELIJK"
-    return sorted(solutions)[0]
+        return ["ONMOGELIJK"]
+    return sorted(solutions)
 
 
+test_cases = int(input())
 for i in range(test_cases):
     code = input()
     alphabet_len = int(input())
@@ -152,5 +118,6 @@ for i in range(test_cases):
         val = input()
         alphabet[key] = val
 
-    test = walk(Node(code), sort_alphabet(alphabet))
-    print(f'{i + 1} {test}')
+    sorted_alpha = sort_alphabet(alphabet)
+    test = solve(Node(code), sorted_alpha, gen_blacklist(sorted_alpha))
+    print(f'{i + 1} {test[0]}')
