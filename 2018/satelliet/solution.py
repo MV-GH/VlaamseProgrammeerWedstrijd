@@ -26,8 +26,9 @@ codes = []
 
 
 class Node:
-    def __init__(self, name, depth=0):
+    def __init__(self, name, depth=0, letter=""):
         self.name = name
+        self.letters = letter
         self.children = []
         self.depth = depth
 
@@ -35,8 +36,8 @@ class Node:
 
     def __repr__(self): return self.__str__()
 
-    def make_child(self, name):
-        return Node(name, self.depth + 1)
+    def make_child(self, name, letter):
+        return Node(name, self.depth + 1, self.letters + letter)
 
 
 """
@@ -101,19 +102,44 @@ def walkv2(root: str, alphabet):
 
 
 def replacer(code: str, alphabet: {}):
-    new_code = ""
-    while code != "":
-        found  = False
+    queue = deque([Node(code)])
+    while queue:
+        cur_node = queue.popleft()
+        found = False
         for key in alphabet:
             replace_code = alphabet[key]
-            if code.startswith(replace_code):
-                new_code += key
-                code = code.replace(replace_code, "", 1)
+            if cur_node.name.startswith(replace_code):
+                cur_node.letters += key
+                cur_node.name = cur_node.name.replace(replace_code, "", 1)
                 found = True
                 break
         if not found:
             return "ONMOGELIJK"
     return new_code
+
+def walk(root: Node, alphabet):
+    queue = deque([root])
+    solutions = set()
+    while len(queue) > 0:
+        cur_node = queue.popleft()
+        for key in alphabet:
+            replace_code = alphabet[key]
+            if replace_code not in cur_node.name or (not cur_node.name.startswith(replace_code)):
+                continue
+            new_code = cur_node.name.replace(replace_code, "", 1)
+            if new_code == "":
+                solutions.add(cur_node.letters + key)
+                while queue and queue[-1].depth == cur_node.depth + 1:  # removes elements from the next depth, found solution at this depth already
+                    queue.pop()
+                break
+            new_node = cur_node.make_child(new_code, key)
+            cur_node.children.append(new_node)
+        if not solutions:  # if it found a solution let it complete that depth so that it may find our solutions that could may be alphabetically be better
+            queue.extend(cur_node.children)
+            cur_node.children.clear()  # saves memory but destroys the tree structure for so only keep for debuggging, (keeps all the nodes in a tree alive)
+    if not solutions:
+        return "ONMOGELIJK"
+    return sorted(solutions)[0]
 
 
 for i in range(test_cases):
@@ -126,5 +152,5 @@ for i in range(test_cases):
         val = input()
         alphabet[key] = val
 
-    test = replacer(code, sort_alphabet(alphabet))
+    test = walk(Node(code), sort_alphabet(alphabet))
     print(f'{i + 1} {test}')
